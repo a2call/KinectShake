@@ -30,22 +30,30 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         private GLControl glc;
 
         float xangle, yangle, zangle;
-
+        float posx, posy;
 
         public OpenGLWin()
         {
             InitializeComponent();
 
-            xangle = 0;
-            yangle = 0;
-            zangle = 0;
+            posx = posy = 0;
+            xangle = yangle = zangle = 0;
         }
 
         public void incAngle(float x, float y, float z){
             xangle+=x;
             yangle+=y;
             zangle+=z;
+            this.glc.Refresh();
         }
+
+        public void setPos(float x, float y)
+        {
+            posx = x;
+            posy = y;
+            this.glc.Refresh();
+        }
+
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -122,7 +130,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
             // Draw a teapot
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            RenderTeapot(0.0f, 0.0f, 0.0f, 0.135f, 0.2225f, 0.1575f,
+            RenderTeapot(posx,posy,0.0f, 0.135f, 0.2225f, 0.1575f,
             0.54f, 0.89f, 0.63f, 0.316228f, 0.316228f, 0.316228f, 0.1f);
 
             /*GL.Color4(System.Drawing.Color.Red);

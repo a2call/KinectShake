@@ -207,6 +207,12 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             }
         }
 
+        private void processRightHand(Joint j)
+        {
+            Debug.WriteLine("x:{0} y:{0} z{0}",
+                        j.Position.X, j.Position.Y, j.Position.Z);
+            oglwin.setPos(j.Position.X, j.Position.Y);
+        }
 
 
         /// <summary>
@@ -244,8 +250,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                             foreach (Joint j in skel.Joints){
                                 if (j.JointType == JointType.HandRight)
                                 {
-                                    Debug.WriteLine("x:{0} y:{0} z{0}",
-                                                j.Position.X, j.Position.Y, j.Position.Z);
+                                    processRightHand(j);
                                 }
                             }
 
