@@ -243,6 +243,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 if (currxval - prevxval > 50)
                 {
                     status.Text = "Right swipe";
+                    oglwin.incAngle(0, 5, 0);
                 }
                 if (curryval - prevyval > 50)
                 {
@@ -280,6 +281,22 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         }
 
 
+        private void processRightHand(Joint j)
+        {
+            //oglwin.setPos(j.Position.X, j.Position.Y, j.Position.Z);
+        }
+
+        private void processLeftHand(Joint j)
+        {
+            t1.Text = this.SkeletonPointToScreen(j.Position).ToString();
+            Point p1 = this.SkeletonPointToScreen(j.Position);
+            xval = (int)p1.X;
+            yval = (int)p1.Y;
+            xx.Text = xval.ToString();
+            yy.Text = yval.ToString();
+            Debug.WriteLine("x: {0} y:{1}", p1.X, p1.Y);
+        }
+        //code ends
 
         /// <summary>
         /// Event handler for Kinect sensor's SkeletonFrameReady event
@@ -316,8 +333,12 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                             foreach (Joint j in skel.Joints){
                                 if (j.JointType == JointType.HandRight)
                                 {
-                                    Debug.WriteLine("x:{0} y:{0} z{0}",
-                                                j.Position.X, j.Position.Y, j.Position.Z);
+                                    processRightHand(j);
+                                }
+
+                                if (j.JointType == JointType.HandLeft)
+                                {
+                                    processLeftHand(j);
                                 }
                             }
 
@@ -443,19 +464,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             }
 
             drawingContext.DrawLine(drawPen, this.SkeletonPointToScreen(joint0.Position), this.SkeletonPointToScreen(joint1.Position));
-            //plugged in my code
-            if (jointType0 == JointType.WristLeft && jointType1 == JointType.HandLeft)
-            {
-                t1.Text = this.SkeletonPointToScreen(joint1.Position).ToString();
-                Point p1 = this.SkeletonPointToScreen(joint1.Position);
-                xval = (int)p1.X;
-                yval = (int)p1.Y;
-                xx.Text = xval.ToString();
-                yy.Text = yval.ToString();
-                Debug.WriteLine("x: {0} y:{1}", p1.X, p1.Y);
-            }
-
-            //code ends
         }
 
         /// <summary>

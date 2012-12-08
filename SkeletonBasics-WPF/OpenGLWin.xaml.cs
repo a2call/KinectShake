@@ -30,7 +30,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         private GLControl glc;
 
         float xangle, yangle, zangle;
-        float posx, posy;
+        float posx, posy, posz;
 
         public OpenGLWin()
         {
@@ -47,10 +47,12 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             this.glc.Refresh();
         }
 
-        public void setPos(float x, float y)
+        public void setPos(float x, float y, float z)
         {
-            posx = x;
-            posy = y;
+            posx = x*5;
+            posy = y*5;
+            posz = z*5;
+            Debug.WriteLine("RH x:{0} y:{1} z:{2}", posx, posy, posz);
             this.glc.Refresh();
         }
 
@@ -69,10 +71,10 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             GL.Viewport(glc.ClientSize);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
-            //if (glc.ClientSize.Width <= glc.ClientSize.Height)
-            //GL.Ortho(-2, -2+4.0*glc.ClientSize.Width/glc.ClientSize.Height,-2,2,-100,100);
-            
+
             float aspect = glc.ClientSize.Width * 1.0f / glc.ClientSize.Height;
+            //GL.Ortho(-8,-8+16*aspect,-8,8,-10,10);
+            
             Glu.Perspective(45.0f, aspect, 0, 100);
 
             //else
@@ -130,7 +132,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
             // Draw a teapot
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            RenderTeapot(posx,posy,0.0f, 0.135f, 0.2225f, 0.1575f,
+            RenderTeapot(posx,posy,posz, 0.135f, 0.2225f, 0.1575f,
             0.54f, 0.89f, 0.63f, 0.316228f, 0.316228f, 0.316228f, 0.1f);
 
             /*GL.Color4(System.Drawing.Color.Red);
