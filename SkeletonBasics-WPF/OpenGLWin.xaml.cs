@@ -63,7 +63,14 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             this.glc.Load += new EventHandler(glc_Loaded);
             this.glc.Paint += new System.Windows.Forms.PaintEventHandler(glc_Paint);
             this.glc.Resize += new EventHandler(glc_Resize);
+            this.KeyDown += new KeyEventHandler(OpenGLWin_KeyDown);
+            
+            
             this.host.Child = this.glc;
+        }
+
+        void OpenGLWin_KeyDown(object sender, KeyEventArgs e)
+        {
         }
 
         void glc_Resize(object sender, EventArgs e)
@@ -74,12 +81,9 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
             float aspect = glc.ClientSize.Width * 1.0f / glc.ClientSize.Height;
             //GL.Ortho(-8,-8+16*aspect,-8,8,-10,10);
-            
+
             Glu.Perspective(45.0f, aspect, 0, 100);
 
-            //else
-            //GL.Ortho(0.0, 16.0 * (float)glc.ClientSize.Width / (float)glc.ClientSize.Height, 0.0, 16.0,
-            //        -10.0, 10.0);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
         }
@@ -87,11 +91,12 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         void glc_Loaded(object sender, EventArgs e)
         {
             // Make background "chocolate"
-            GL.ClearColor(System.Drawing.Color.Chocolate);
+            GL.ClearColor(System.Drawing.Color.Black);
 
             int w = glc.Width;
             int h = glc.Height;
 
+            /*
             // Set up initial modes
             float[] ambient = { 0.2f, 0.2f, 0.2f, 1.0f };
             float[] diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -115,6 +120,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             GL.DepthFunc(DepthFunction.Lequal);
 
             GL.ClearColor(System.Drawing.Color.Black);
+             */
         }
 
         void glc_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
@@ -123,24 +129,19 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
-
-            Glu.LookAt(0, 0, 10, 0, 0, 0, 0, 1, 0);
+            GL.Translate(0, 0, -5);
 
             GL.Rotate(xangle, 1, 0, 0);
             GL.Rotate(yangle, 0, 1, 0);
             GL.Rotate(zangle, 0, 0, 1);
 
-            // Draw a teapot
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            RenderTeapot(posx,posy,posz, 0.135f, 0.2225f, 0.1575f,
-            0.54f, 0.89f, 0.63f, 0.316228f, 0.316228f, 0.316228f, 0.1f);
-
-            /*GL.Color4(System.Drawing.Color.Red);
+            GL.Color4(System.Drawing.Color.Red);
             GL.Begin(BeginMode.Triangles);
-            GL.Vertex3(0.0f, 1.0f, -5.0f);              // Top
-            GL.Vertex3(-1.0f, -1.0f, -5.0f);              // Bottom Left
-            GL.Vertex3(0.0f, -0.0f, -5.0f);              // Bottom Right
-            GL.End();*/
+            GL.Vertex3(0.0f, 1.0f, 0.0f);              // Top
+            GL.Vertex3(-1.0f, -1.0f, 0.0f);              // Bottom Left
+            GL.Vertex3(1.0f, -1.0f, 0.0f);              // Bottom Right
+            GL.End();
+
             glc.SwapBuffers();
         }
 
