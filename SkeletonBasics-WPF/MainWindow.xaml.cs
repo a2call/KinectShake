@@ -10,7 +10,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
     using System.Windows;
     using System.Windows.Media;
     using Microsoft.Kinect;
+    //plugged in my code
+    using System.Xaml;
     using System.Diagnostics;
+    using System.Windows.Threading;
+    //code ends
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -21,7 +25,13 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// Width of output drawing
         /// </summary>
         private const float RenderWidth = 640.0f;
-
+        //plugged in my code
+        private DispatcherTimer time2;
+        private int currxval, curryval;
+        private int prevxval, prevyval;
+        private bool firstTime;
+        int xval, yval;
+        //code ends
         /// <summary>
         /// Height of our output drawing
         /// </summary>
@@ -89,7 +99,19 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// </summary>
         public MainWindow()
         {
+            //plugged in my code
+            currxval = 0;
+            curryval = 0;
+            xval = 0;
+            yval = 0;
+            prevxval = 0;
+            prevyval = 0;
+            firstTime = true;
+            //code ends
             InitializeComponent();
+            //plugged in my code
+            //Loaded += new RoutedEventHandler(WindowLoaded);
+            //code ends
         }
 
         /// <summary>
@@ -145,6 +167,13 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             // Create the drawing group we'll use for drawing
             this.drawingGroup = new DrawingGroup();
 
+            //plugged in my code
+            time2 = new DispatcherTimer();
+            time2.Tick += new System.EventHandler(time2_Tick);
+            time2.Interval = new System.TimeSpan(0, 0, 1);
+            time2.Start();
+            //code ends
+
             // Create an image source that we can use in our image control
             this.imageSource = new DrawingImage(this.drawingGroup);
 
@@ -188,6 +217,46 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 this.statusBarText.Text = Properties.Resources.NoKinectReady;
             }
         }
+        //plugged in my code
+        //A timer event called to detect swipe gestures of the left hand
+        private void time2_Tick(object source, System.EventArgs e)
+        {
+            if (xval != 0 && yval != 0 && firstTime == true)
+            {
+                //Debug.WriteLine(firstTime);
+                currxval = xval;
+                curryval = yval;
+                prevxval = xval;
+                prevyval = yval;
+                //Debug.WriteLine(currxval + " " + curryval + " " + prevxval + " " + prevyval);
+                firstTime = false;
+            }
+            else if (xval != 0 && yval != 0 && firstTime == false)
+            {
+                currxval = xval;
+                curryval = yval;
+                //Debug.WriteLine(currxval + " " + curryval + " " + prevxval + " " + prevyval);
+                if (currxval - prevxval < -50)
+                {
+                    status.Text = "Left swipe";
+                }
+                if (currxval - prevxval > 50)
+                {
+                    status.Text = "Right swipe";
+                }
+                if (curryval - prevyval > 50)
+                {
+                    status.Text = "Down swipe";
+                }
+                if (curryval - prevyval < -50)
+                {
+                    status.Text = "Up swipe";
+                }
+                prevxval = currxval;
+                prevyval = curryval;
+            }
+        }
+        //code ends
 
         /// <summary>
         /// Execute shutdown tasks
@@ -205,14 +274,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             {
                 this.oglwin.Close();
             }
+            //plugged in my code
+            time2.Stop();
+            //code ends
         }
 
-        private void processRightHand(Joint j)
-        {
-            Debug.WriteLine("x:{0} y:{0} z{0}",
-                        j.Position.X, j.Position.Y, j.Position.Z);
-            oglwin.setPos(j.Position.X, j.Position.Y);
-        }
 
 
         /// <summary>
@@ -250,7 +316,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                             foreach (Joint j in skel.Joints){
                                 if (j.JointType == JointType.HandRight)
                                 {
-                                    processRightHand(j);
+                                    Debug.WriteLine("x:{0} y:{0} z{0}",
+                                                j.Position.X, j.Position.Y, j.Position.Z);
                                 }
                             }
 
@@ -376,6 +443,19 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             }
 
             drawingContext.DrawLine(drawPen, this.SkeletonPointToScreen(joint0.Position), this.SkeletonPointToScreen(joint1.Position));
+            //plugged in my code
+            if (jointType0 == JointType.WristLeft && jointType1 == JointType.HandLeft)
+            {
+                t1.Text = this.SkeletonPointToScreen(joint1.Position).ToString();
+                Point p1 = this.SkeletonPointToScreen(joint1.Position);
+                xval = (int)p1.X;
+                yval = (int)p1.Y;
+                xx.Text = xval.ToString();
+                yy.Text = yval.ToString();
+                Debug.WriteLine("x: {0} y:{1}", p1.X, p1.Y);
+            }
+
+            //code ends
         }
 
         /// <summary>
