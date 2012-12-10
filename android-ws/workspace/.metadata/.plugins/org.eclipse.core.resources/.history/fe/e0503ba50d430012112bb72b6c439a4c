@@ -1,0 +1,24 @@
+package com.example.test;
+
+import java.io.IOException;
+import java.net.*;
+
+
+public class SocketClient implements Runnable{
+	public void run(){
+		try {
+			Socket s = new Socket("www.google.com",80);
+			System.out.println("here");
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public static void main (String [] args){
+		Thread t = new Thread(new SocketClient());
+		t.start();
+	}
+};
