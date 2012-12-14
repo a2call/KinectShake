@@ -53,12 +53,13 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
                     // Show the data on the console.
                     Debug.WriteLine("Text received : "+ data);
-                    oglwin_.addAtom(Atom.AtomType.O);
+
+                    handleMsg(data);
 
                     // Echo the data back to the client.
-                    byte[] msg = Encoding.ASCII.GetBytes(data);
+                    //Encoding.ASCII.GetBytes(statusMsg());
+                    handler.Send(Encoding.ASCII.GetBytes(genMsg(oglwin_.getStatus())));
 
-                    handler.Send(msg);
                     handler.Shutdown(SocketShutdown.Both);
                     handler.Close();
                 }
@@ -68,6 +69,37 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             {
                 Debug.WriteLine(e.ToString());
             }
+        }
+
+
+        public static String genMsg(AtomsDB.StatusType s){
+            switch (s)
+            {
+                case AtomsDB.StatusType.OK:
+                    return "ok";
+                case AtomsDB.StatusType.ATTRACT:
+                    return "attract";
+                case AtomsDB.StatusType.REPEL:
+                    return "repel";
+                default:
+                    return "ok";
+            }
+        }
+
+        public static void handleMsg(String data)
+        {
+            if (data == "hydrogen")
+            {
+                oglwin_.addAtom(Atom.AtomType.H);
+            }
+            if (data == "oxygen")
+            {
+                oglwin_.addAtom(Atom.AtomType.O);
+            }
+            if (data == "drop")
+            {
+                oglwin_.dropAtom();
+            }        
         }
     }
 }

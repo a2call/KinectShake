@@ -17,6 +17,10 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         public static float [] atomradii_ = {0.3f,0.7f};
 
 
+        public AtomType type(){
+            return t_;
+        }
+
         public Atom(AtomType t)
         {
             t_ = t;
@@ -54,8 +58,10 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             }
         }
     }
-    class AtomsDB
+    public class AtomsDB
     {
+        public enum StatusType {OK, ATTRACT, REPEL};
+
         public ArrayList atomlist = new ArrayList();
 
         public void addAtom(Atom atm)
@@ -63,16 +69,23 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             atomlist.Add(atm);
         }
 
-        public bool checkIntersection(Atom a)
+        public StatusType checkIntersection(Atom a)
         {
             foreach (Atom atm in atomlist)
             {
                 if (a.intersect(atm))
                 {
-                    return true;
+                    if (atm.type() == a.type())
+                    {
+                        return StatusType.REPEL;
+                    }
+                    else
+                    {
+                        return StatusType.ATTRACT;
+                    }
                 }
             }
-            return false;
+            return StatusType.OK;
         }
     }
 }
