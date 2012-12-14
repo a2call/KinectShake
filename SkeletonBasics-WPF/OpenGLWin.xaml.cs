@@ -59,7 +59,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             //check for collisions
             if (atomsdb.checkIntersection(atom))
             {
-                Debug.WriteLine("collide");
+                //Debug.WriteLine("collide");
             }
 
             posx = x-320.0f;
@@ -70,7 +70,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
             atom.setPos(posx, posy, posz);
 
-            Debug.WriteLine("pos {0} {1} {2}", posx, posy, posz);
+            //Debug.WriteLine("pos {0} {1} {2}", posx, posy, posz);
             this.glc.Refresh();
         }
 
@@ -203,7 +203,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 Glu.Sphere(q, a.r(), 16, 16);
                 GL.PopMatrix();
             }
-            Debug.WriteLine(atomsdb.atomlist.Count);
+            //Debug.WriteLine(atomsdb.atomlist.Count);
 
 
             glc.SwapBuffers();
@@ -260,7 +260,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             int res = Glu.UnProject(winx, winy, -6, modelview, projection,viewport,
                 glposx,glposy,glposz);
             //Debug.WriteLine("cursor {0} {1} {2} {3}", res, glposx[0],glposy[0],glposz[0]);
-            Debug.WriteLine("cursor {0} {1} {2}", winx,winy,winz);
+            //Debug.WriteLine("cursor {0} {1} {2}", winx,winy,winz);
         }
     }
 }
