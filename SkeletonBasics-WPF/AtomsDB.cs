@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace Microsoft.Samples.Kinect.SkeletonBasics
 {
-    class Atom
+    public class Atom
     {
         public enum AtomType { H, O };
 

@@ -86,22 +86,24 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             this.host.Child = this.glc;
         }
 
+        public void addAtom(Atom.AtomType t)
+        {
+            if (atom == null)
+            {
+                this.atom = new Atom(t);
+            }
+        }
+
         void OpenGLWin_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == System.Windows.Input.Key.O)
             {
-                if (atom == null)
-                {
-                    this.atom = new Atom(Atom.AtomType.O);
-                }
+                addAtom(Atom.AtomType.O);
             }
 
             if (e.Key == System.Windows.Input.Key.H)
             {
-                if (atom == null)
-                {
-                    this.atom = new Atom(Atom.AtomType.H);
-                }
+                addAtom(Atom.AtomType.H);
             }
 
             if (e.Key == System.Windows.Input.Key.D)

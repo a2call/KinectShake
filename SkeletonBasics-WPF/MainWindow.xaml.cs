@@ -305,7 +305,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             yval = (int)p1.Y;
             xx.Text = xval.ToString();
             yy.Text = yval.ToString();
-            Debug.WriteLine("x: {0} y:{1}", p1.X, p1.Y);
+            //Debug.WriteLine("x: {0} y:{1}", p1.X, p1.Y);
         }
         //code ends
 

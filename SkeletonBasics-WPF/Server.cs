@@ -47,19 +47,13 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                     data = null;
 
                     // An incoming connection needs to be processed.
-                    while (true)
-                    {
-                        bytes = new byte[1024];
-                        int bytesRec = handler.Receive(bytes);
-                        data += Encoding.ASCII.GetString(bytes, 0, bytesRec);
-                        if (data.IndexOf("<EOF>") > -1)
-                        {
-                            break;
-                        }
-                    }
+                    bytes = new byte[1024];
+                    int bytesRec = handler.Receive(bytes);
+                    data += Encoding.ASCII.GetString(bytes, 0, bytesRec);
 
                     // Show the data on the console.
-                    Debug.WriteLine("Text received : {0}", data);
+                    Debug.WriteLine("Text received : "+ data);
+                    oglwin_.addAtom(Atom.AtomType.O);
 
                     // Echo the data back to the client.
                     byte[] msg = Encoding.ASCII.GetBytes(data);
