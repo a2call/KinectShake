@@ -33,6 +33,9 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         private int prevxval, prevyval;
         private bool firstTime;
         int xval, yval;
+        int iterations;
+        double cumx, cumy;
+        TransformSmoothParameters sm;
         //code ends
         /// <summary>
         /// Height of our output drawing
@@ -110,6 +113,9 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             prevxval = 0;
             prevyval = 0;
             firstTime = true;
+            sm = new TransformSmoothParameters();
+            iterations = 0;
+            cumx = cumy = 0;
             //code ends
             InitializeComponent();
             //plugged in my code
@@ -177,8 +183,14 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             //plugged in my code
             time2 = new DispatcherTimer();
             time2.Tick += new System.EventHandler(time2_Tick);
-            time2.Interval = new System.TimeSpan(0, 0, 1);
+            time2.Interval = new System.TimeSpan(0, 0, 0, 0, 150);
             time2.Start();
+            sm.Smoothing = 0.5f;
+            sm.Correction = 0.5f;
+            sm.Prediction = 0.5f;
+            sm.JitterRadius = 0.05f;
+            sm.MaxDeviationRadius = 0.04f;
+
             //code ends
 
             // Create an image source that we can use in our image control
@@ -203,7 +215,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             if (null != this.sensor)
             {
                 // Turn on the skeleton stream to receive skeleton frames
-                this.sensor.SkeletonStream.Enable();
+                this.sensor.SkeletonStream.Enable(sm);
 
                 // Add an event handler to be called whenever there is new color frame data
                 this.sensor.SkeletonFrameReady += this.SensorSkeletonFrameReady;
@@ -230,38 +242,38 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         {
             if (xval != 0 && yval != 0 && firstTime == true)
             {
-                //Debug.WriteLine(firstTime);
                 currxval = xval;
                 curryval = yval;
                 prevxval = xval;
                 prevyval = yval;
-                //Debug.WriteLine(currxval + " " + curryval + " " + prevxval + " " + prevyval);
                 firstTime = false;
             }
-            else if (xval != 0 && yval != 0 && firstTime == false)
+            else if (xval != 0 && yval != 0 && firstTime == false && iterations >= 0)
             {
                 currxval = xval;
                 curryval = yval;
-                //Debug.WriteLine(currxval + " " + curryval + " " + prevxval + " " + prevyval);
-                if (currxval - prevxval < -50)
+                cumx += (currxval - prevxval);
+                cumy += (curryval - prevyval);
+                iterations++;
+                if (iterations == 4) status.Text = "";
+                if (iterations == 5)
                 {
-                    status.Text = "Left swipe";
-                }
-                if (currxval - prevxval > 50)
-                {
-                    status.Text = "Right swipe";
-                    oglwin.incAngle(0, 5, 0);
-                }
-                if (curryval - prevyval > 50)
-                {
-                    status.Text = "Down swipe";
-                }
-                if (curryval - prevyval < -50)
-                {
-                    status.Text = "Up swipe";
+                    if (cumx > 150) status.Text = "Swipe right";
+                    else if (cumx < -150) status.Text = "Swipe left";
+                    else if (cumy > 150) status.Text = "Swipe down";
+                    else if (cumy < -150) status.Text = "Swipe up";
+                    Debug.WriteLine(status.Text);
+                    iterations = -2;
+                    cumx = 0;
+                    cumy = 0;
+
                 }
                 prevxval = currxval;
                 prevyval = curryval;
+            }
+            else if (iterations < 0)
+            {
+                iterations++;
             }
         }
         //code ends
