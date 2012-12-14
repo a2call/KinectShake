@@ -14,6 +14,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
     using System.Xaml;
     using System.Diagnostics;
     using System.Windows.Threading;
+    using System.Threading;
+
     //code ends
 
     /// <summary>
@@ -93,6 +95,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         private DrawingImage imageSource;
 
         private OpenGLWin oglwin;
+        //private Server server;
 
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
@@ -162,7 +165,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
             this.oglwin = new OpenGLWin();
-            this.oglwin.Show();         
+            this.oglwin.Show();
+
+            Server.oglwin_ = this.oglwin;
+            Thread th = new Thread(new ThreadStart(Server.StartListening));
+            th.Start();
 
             // Create the drawing group we'll use for drawing
             this.drawingGroup = new DrawingGroup();
@@ -283,7 +290,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
         private void processRightHand(Joint j)
         {
-            //oglwin.setPos(j.Position.X, j.Position.Y, j.Position.Z);
+            DepthImagePoint depthPoint = this.sensor.CoordinateMapper.MapSkeletonPointToDepthPoint(j.Position, 
+                DepthImageFormat.Resolution640x480Fps30);
+            //Debug.WriteLine("{0} {1} {2}",depthPoint.X,depthPoint.Y,depthPoint.Depth);
+
+            oglwin.setPos(depthPoint.X,depthPoint.Y,depthPoint.Depth);
         }
 
         private void processLeftHand(Joint j)

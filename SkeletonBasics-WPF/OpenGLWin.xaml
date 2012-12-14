@@ -1,8 +1,8 @@
 ﻿<Window x:Class="Microsoft.Samples.Kinect.SkeletonBasics.OpenGLWin"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="OpenGLWin" Loaded="Window_Loaded" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Height="480" Width="640">
+        Title="OpenGLWin" Loaded="Window_Loaded" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Height="518" Width="662">
     <Grid>
-        <WindowsFormsHost HorizontalAlignment="Left" Name="host" VerticalAlignment="Top" Width="618" Height="441" />
+        <WindowsFormsHost HorizontalAlignment="Left" Name="host" VerticalAlignment="Top" Width="640" Height="480" />
     </Grid>
 </Window>
