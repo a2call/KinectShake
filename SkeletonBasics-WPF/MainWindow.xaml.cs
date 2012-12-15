@@ -258,12 +258,20 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 if (iterations == 4) status.Text = "";
                 if (iterations == 5)
                 {
-                    if (cumx > 150) status.Text = "Swipe right";
-                    else if (cumx < -150) status.Text = "Swipe left";
+                    if (cumx > 100)
+                    {
+                        status.Text = "Swipe right";
+                        oglwin.incAngle(0, 30, 0);
+                    }
+                    else if (cumx < -100)
+                    {
+                        status.Text = "Swipe left";
+                        oglwin.incAngle(0, -30, 0);
+                    }
                     else if (cumy > 150) status.Text = "Swipe down";
                     else if (cumy < -150) status.Text = "Swipe up";
-                    Debug.WriteLine(status.Text);
-                    iterations = -2;
+                    //Debug.WriteLine(status.Text);
+                    iterations = -5;
                     cumx = 0;
                     cumy = 0;
 
