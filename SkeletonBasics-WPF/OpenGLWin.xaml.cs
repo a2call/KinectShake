@@ -33,6 +33,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
         private AtomsDB atomsdb = new AtomsDB();
         private Atom atom = null;
+        private AtomsDB.StatusType status_ = AtomsDB.StatusType.OK;
 
         public OpenGLWin()
         {
@@ -56,12 +57,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 return;
             }
 
-            //check for collisions
-            if (atomsdb.checkIntersection(atom))
-            {
-                //Debug.WriteLine("collide");
-            }
-
             posx = x-320.0f;
             posy = (480.0f-y)-240.0f;
             posx = posx / 320.0f * 3.33f;
@@ -69,6 +64,9 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             posz = -(z-1000)/128.0f;
 
             atom.setPos(posx, posy, posz);
+
+            //check for collisions
+            status_ = atomsdb.checkIntersection(atom);
 
             //Debug.WriteLine("pos {0} {1} {2}", posx, posy, posz);
             this.glc.Refresh();
@@ -94,6 +92,21 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             }
         }
 
+        public void dropAtom()
+        {
+            if (atom != null)
+            {
+                this.atomsdb.addAtom(this.atom);
+                this.atom = null;
+            }
+        }
+
+        public AtomsDB.StatusType getStatus()
+        {
+            return status_;
+        }
+
+
         void OpenGLWin_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == System.Windows.Input.Key.O)
@@ -108,8 +121,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
             if (e.Key == System.Windows.Input.Key.D)
             {
-                this.atomsdb.addAtom(this.atom);
-                this.atom = null;
+                dropAtom();
             }
 
             if (e.Key == System.Windows.Input.Key.Left)
@@ -121,6 +133,13 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             {
                 incAngle(0, 3, 0);
             }
+
+            if (e.Key == System.Windows.Input.Key.R)
+            {
+                this.atomsdb.atomlist.Clear();
+                atom = null;
+            }
+            this.glc.Refresh();
         }
 
         void glc_Resize(object sender, EventArgs e)
